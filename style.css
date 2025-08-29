@@ -147,13 +147,6 @@
 
 
 
-.error-message {
-    color: #d32f2f; font-size: clamp(14px, 3vw, 18px); text-align: center;
-    margin-top: 15px; display: none; align-self: center; width: 100%;
-    padding: 10px; background-color: #ffebee; border-radius: 8px; border: 1px solid #ffcdd2;
-}
-
-
 
 .texto-placeholder { color: #1E5AA8; font-weight: normal; }
 .codes-list {
