@@ -142,7 +142,11 @@ document.addEventListener("DOMContentLoaded", function () {
         currentSesionId = null;
     });
 
+    // Inicializar
     hideMessages();
     mainSection.style.display = "block";
     resultSection.style.display = "none";
+
+    // SIEMPRE enfoca el input al cargar la página
+    input.focus();
 });
