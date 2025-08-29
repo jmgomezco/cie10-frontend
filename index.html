@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cie-10</title>
+    <title>CIE-10-MC</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="https://nhug-cie10-assets.s3.us-east-1.amazonaws.com/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="https://nhug-cie10-assets.s3.us-east-1.amazonaws.com/favicon/favicon.svg" />
     <link rel="shortcut icon" href="https://nhug-cie10-assets.s3.us-east-1.amazonaws.com/favicon/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180" href="https://nhug-cie10-assets.s3.us-east-1.amazonaws.com/favicon/apple-touch-icon.png" /
+    <link rel="apple-touch-icon" sizes="180x180" href="https://nhug-cie10-assets.s3.us-east-1.amazonaws.com/favicon/apple-touch-icon.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div class="container">
         <h2><span class="nhug">Nhug</span><span class="ai">Ai</span></h2>
-        <div id="main-section">
+        
             <div class="instrucciones">
                 Introduce un texto descriptivo para el código CIE-10 que deseas encontrar, luego pulsa Intro.
             </div>
@@ -21,25 +23,27 @@
                 type="text" 
                 class="caja-texto" 
                 id="textoInput"
-                autofocus
                 placeholder="Sospecha de enfermedad mitocondrial"
             >
             <div class="error-message" id="errorMessage"></div>
             <div class="spinner" id="spinner"></div>
-        </div>
-        <div id="result-section" style="display:none;">
-            <p class="message-paragraph">
-                Códigos propuestos para tu entrada: <span class="texto-placeholder" id="texto-placeholder"></span>.
-            </p>
-            <div class="codes-list" id="codes-list"></div>
-            <div class="action-buttons">
-                <button class="new-search-button" id="new-search-btn">Prueba con otro texto</button>
-            </div>
-            <div class="no-codes-message" id="no-codes-message" style="display:none;">
-                <p>No se encontraron códigos candidatos.</p>
-            </div>
-        </div>
-    </div>
-    <script src="main.js"></script>
+  </div>
+
+  <div id="result-section" style="display:none;">
+      <p class="message-paragraph">
+          Códigos propuestos para tu entrada: <span class="texto-placeholder" id="texto-placeholder"></span>.
+      </p>
+      <div class="codes-list" id="codes-list"></div>
+      <div class="action-buttons">
+          <button class="new-search-button" id="new-search-btn">Prueba con otro texto</button>
+      </div>
+      <div class="no-codes-message" id="no-codes-message" style="display:none;">
+          <p>No se encontraron códigos candidatos.</p>
+      </div>
+  </div>
+
+
+  <script src="main.js"></script>
+
 </body>
 </html>
