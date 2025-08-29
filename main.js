@@ -30,9 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function hideMessages() {
-        error.style.display = "none";
-        spinner.style.display = "none";
-        noCodesMsg.style.display = "none";
+    error.style.display = "none";
+    noCodesMsg.style.display = "none";
     }
 
     function showSpinner() {
@@ -106,42 +105,41 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Usamos keydown, pero solo actúa si hay texto no vacío
-    input.addEventListener("keydown", async (e) => {
-        if (e.key !== "Enter") return;
-        e.preventDefault();
-        const texto = input.value.trim().substring(0, 200);
+input.addEventListener("keydown", async (e) => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    const texto = input.value.trim().substring(0, 200);
 
-        // Si el texto está vacío, simplemente sigue esperando sin hacer nada
-        if (!texto) {
-            input.focus();
-            return;
-        }
-        showSpinner();
-        hideMessages();
+    if (!texto) {
+        input.focus();
+        return;
+    }
+    hideMessages();   // <-- Primero oculta mensajes previos
+    showSpinner();    // <-- Luego muestra el spinner
 
-        try {
-            const res = await fetch(API_BASE + "/texto", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ texto })
-            });
-            hideSpinner();
-            if (!res.ok) {
-                const errorText = await res.text();
-                throw new Error(`Error del servidor: ${res.status} ${errorText}`);
-            }
-            const data = await res.json();
-            // Oculta pantalla inicial, muestra resultados
-            containerInicial.style.display = "none";
-            containerResultados.style.display = "flex";
-            textoPlaceholder.textContent = texto;
-            renderCodes(data.codigos || data.codes || []);
-            currentSesionId = data.sesionId || null;
-        } catch (err) {
-            hideSpinner();
-            showError("Error: " + (err.message || "Error desconocido"));
+    try {
+        const res = await fetch(API_BASE + "/texto", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ texto })
+        });
+        hideSpinner();
+        if (!res.ok) {
+            const errorText = await res.text();
+            throw new Error(`Error del servidor: ${res.status} ${errorText}`);
         }
-    });
+        const data = await res.json();
+        containerInicial.style.display = "none";
+        containerResultados.style.display = "flex";
+        textoPlaceholder.textContent = texto;
+        renderCodes(data.codigos || data.codes || []);
+        currentSesionId = data.sesionId || null;
+    } catch (err) {
+        hideSpinner();
+        showError("Error: " + (err.message || "Error desconocido"));
+    }
+});
+
 
     newSearchBtn.addEventListener("click", () => {
         containerInicial.style.display = "flex";
