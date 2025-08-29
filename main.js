@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // NUEVO: almacenar sesionId para usarlo en /select
     let currentSesionId = null;
 
-    const API_BASE = "https://zt7bqbie09.execute-api.us-east-1.amazonaws.com";
+    const API_BASE = "https://ffljaqyibd.execute-api.us-east-1.amazonaws.com/";
         
 
     if ("visualViewport" in window) {
