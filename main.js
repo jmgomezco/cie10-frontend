@@ -9,7 +9,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const newSearchBtn = document.getElementById("new-search-btn");
     const noCodesMsg = document.getElementById("no-codes-message");
 
-    // Mantener el input visible en móviles
+    // NUEVO: almacenar sesionId para usarlo en /select
+    let currentSesionId = null;
+
+    const API_BASE = "https://zt7bqbie09.execute-api.us-east-1.amazonaws.com";
+
     if ("visualViewport" in window) {
         window.visualViewport.addEventListener("resize", () => {
             input.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -52,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
             number.textContent = code.codigo || code.code || "";
             const desc = document.createElement("div");
             desc.className = "code-description";
-            desc.textContent = code.descripcion || code.description || "";
+            desc.textContent = code.desc_es || code.descripcion || code.description || "";
             info.appendChild(number);
             info.appendChild(desc);
 
@@ -69,27 +73,28 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    function seleccionarCodigo(code) {
-        // Aquí puedes cambiar la lógica según el endpoint de selección (lambda2)
+    async function seleccionarCodigo(code) {
         showSpinner();
-        fetch("/select", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ codigo: code.codigo || code.code })
-        })
-            .then(res => res.json())
-            .then(data => {
-                hideSpinner();
-                if (data && data.ok) {
-                    alert("Código elegido: " + (code.codigo || code.code));
-                } else {
-                    showError("No se pudo registrar la selección.");
-                }
-            })
-            .catch(() => {
-                hideSpinner();
-                showError("Error al conectar con el servidor.");
+        try {
+            const res = await fetch(API_BASE + "/select", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ 
+                    sesionId: currentSesionId, 
+                    codigo: code.codigo || code.code 
+                })
             });
+            hideSpinner();
+            const data = await res.json();
+            if (data && data.ok) {
+                alert("Código elegido: " + (code.codigo || code.code));
+            } else {
+                showError("No se pudo registrar la selección.");
+            }
+        } catch {
+            hideSpinner();
+            showError("Error al conectar con el servidor.");
+        }
     }
 
     input.addEventListener("input", () => {
@@ -105,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
         hideMessages();
 
         try {
-            const res = await fetch("/analyze", {
+            const res = await fetch(API_BASE + "/analyze", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ texto })
@@ -120,6 +125,8 @@ document.addEventListener("DOMContentLoaded", function () {
             resultSection.style.display = "block";
             textoPlaceholder.textContent = texto;
             renderCodes(data.codigos || data.codes || []);
+            // NUEVO: guardar sesionId para /select
+            currentSesionId = data.sesionId || null;
         } catch (err) {
             hideSpinner();
             showError("Error: " + (err.message || "Error desconocido"));
@@ -132,9 +139,9 @@ document.addEventListener("DOMContentLoaded", function () {
         input.value = "";
         hideMessages();
         input.focus();
+        currentSesionId = null;
     });
 
-    // Inicializar
     hideMessages();
     mainSection.style.display = "block";
     resultSection.style.display = "none";
