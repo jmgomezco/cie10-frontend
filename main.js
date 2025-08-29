@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function hideMessages() {
-    error.style.display = "none";
-    noCodesMsg.style.display = "none";
+        error.style.display = "none";
+        noCodesMsg.style.display = "none";
     }
 
     function showSpinner() {
@@ -76,21 +76,59 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Función para mostrar toast emergente de éxito
+    function showSuccessToast(message) {
+        let toast = document.getElementById('success-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'success-toast';
+            document.body.appendChild(toast);
+        }
+        toast.innerText = message;
+
+        // Estilos amigables, centrado, verde #229954
+        toast.style.position = 'fixed';
+        toast.style.top = '50%';
+        toast.style.left = '50%';
+        toast.style.transform = 'translate(-50%, -50%)';
+        toast.style.background = '#229954';
+        toast.style.color = '#fff';
+        toast.style.padding = '1.5em 2.5em';
+        toast.style.borderRadius = '10px';
+        toast.style.fontSize = '1.2em';
+        toast.style.boxShadow = '0 2px 8px rgba(0,0,0,0.23)';
+        toast.style.zIndex = 9999;
+        toast.style.textAlign = 'center';
+        toast.style.opacity = 1;
+        toast.style.transition = 'opacity 0.5s';
+
+        setTimeout(() => {
+            toast.style.opacity = 0;
+            setTimeout(() => {
+                toast.remove();
+                // Redirige y limpia el historial
+                window.location.replace("https://nhug.ai");
+            }, 500);
+        }, 1500); // 1,5 segundos visible
+    }
+
     async function seleccionarCodigo(code) {
         showSpinner();
         try {
             const res = await fetch(API_BASE + "/select", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ 
-                    sesionId: currentSesionId, 
-                    codigo: code.codigo || code.code 
+                body: JSON.stringify({
+                    sesionId: currentSesionId,
+                    codigo: code.codigo || code.code,
+                    desc_es: code.desc_es || code.descripcion || code.description || ""
                 })
             });
             hideSpinner();
             const data = await res.json();
             if (data && data.ok) {
-                alert("Código elegido: " + (code.codigo || code.code));
+                showSuccessToast("Se grabó con éxito su elección");
+                // La redirección se maneja dentro de showSuccessToast
             } else {
                 showError("No se pudo registrar la selección.");
             }
@@ -105,41 +143,40 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Usamos keydown, pero solo actúa si hay texto no vacío
-input.addEventListener("keydown", async (e) => {
-    if (e.key !== "Enter") return;
-    e.preventDefault();
-    const texto = input.value.trim().substring(0, 200);
+    input.addEventListener("keydown", async (e) => {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        const texto = input.value.trim().substring(0, 200);
 
-    if (!texto) {
-        input.focus();
-        return;
-    }
-    hideMessages();   // <-- Primero oculta mensajes previos
-    showSpinner();    // <-- Luego muestra el spinner
-
-    try {
-        const res = await fetch(API_BASE + "/texto", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ texto })
-        });
-        hideSpinner();
-        if (!res.ok) {
-            const errorText = await res.text();
-            throw new Error(`Error del servidor: ${res.status} ${errorText}`);
+        if (!texto) {
+            input.focus();
+            return;
         }
-        const data = await res.json();
-        containerInicial.style.display = "none";
-        containerResultados.style.display = "flex";
-        textoPlaceholder.textContent = texto;
-        renderCodes(data.codigos || data.codes || []);
-        currentSesionId = data.sesionId || null;
-    } catch (err) {
-        hideSpinner();
-        showError("Error: " + (err.message || "Error desconocido"));
-    }
-});
+        hideMessages();   // <-- Primero oculta mensajes previos
+        showSpinner();    // <-- Luego muestra el spinner
 
+        try {
+            const res = await fetch(API_BASE + "/texto", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ texto })
+            });
+            hideSpinner();
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(`Error del servidor: ${res.status} ${errorText}`);
+            }
+            const data = await res.json();
+            containerInicial.style.display = "none";
+            containerResultados.style.display = "flex";
+            textoPlaceholder.textContent = texto;
+            renderCodes(data.codigos || data.codes || []);
+            currentSesionId = data.sesionId || null;
+        } catch (err) {
+            hideSpinner();
+            showError("Error: " + (err.message || "Error desconocido"));
+        }
+    });
 
     newSearchBtn.addEventListener("click", () => {
         containerInicial.style.display = "flex";
