@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');
 * { box-sizing: border-box; }
+
 body {
     margin: 0; padding: 0; background-color: white; font-family: Verdana, sans-serif;
-    min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
+    display: flex; flex-direction: column; overflow-x: hidden;
 }
 .container {
     display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-    width: 100%; max-width: 25cm; min-height: 100vh; margin: 4cm auto 0; padding: 0 20px;
-}
+    width: 100%; max-width: 25cm; min-height: 100vh; margin: 4cm auto 0; 
 
 
 h2 {
