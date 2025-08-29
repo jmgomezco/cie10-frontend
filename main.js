@@ -16,6 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentSesionId = null;
 
     const API_BASE = "https://zt7bqbie09.execute-api.us-east-1.amazonaws.com";
+    const res = await fetch(API_BASE + "/texto", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ texto })            
+    });
+
+    
 
     if ("visualViewport" in window) {
         window.visualViewport.addEventListener("resize", () => {
