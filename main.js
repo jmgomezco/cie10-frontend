@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Elementos de la pantalla inicial
+    const containerInicial = document.getElementById("container-inicial");
     const input = document.getElementById("textoInput");
     const error = document.getElementById("errorMessage");
     const spinner = document.getElementById("spinner");
-    const mainSection = document.getElementById("main-section");
-    const resultSection = document.getElementById("result-section");
-    const codesList = document.getElementById("codes-list");
+
+    // Elementos de la pantalla de resultados
+    const containerResultados = document.getElementById("container-resultados");
+    const resultSectionCodesList = document.getElementById("codes-list");
     const textoPlaceholder = document.getElementById("texto-placeholder");
     const newSearchBtn = document.getElementById("new-search-btn");
     const noCodesMsg = document.getElementById("no-codes-message");
@@ -40,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function renderCodes(codes) {
-        codesList.innerHTML = "";
+        resultSectionCodesList.innerHTML = "";
         if (!codes || codes.length === 0) {
             noCodesMsg.style.display = "block";
             return;
@@ -69,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             codeItem.appendChild(info);
             codeItem.appendChild(btn);
-            codesList.appendChild(codeItem);
+            resultSectionCodesList.appendChild(codeItem);
         });
     }
 
@@ -105,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.key !== "Enter") return;
         e.preventDefault();
         const texto = input.value.trim().substring(0, 200);
-        if (!texto) return;
+        if (!texto) return; // No envía nada, solo sigue esperando
         showSpinner();
         hideMessages();
 
@@ -121,11 +124,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error(`Error del servidor: ${res.status} ${errorText}`);
             }
             const data = await res.json();
-            mainSection.style.display = "none";
-            resultSection.style.display = "block";
+            // Oculta pantalla inicial, muestra resultados
+            containerInicial.style.display = "none";
+            containerResultados.style.display = "flex";
             textoPlaceholder.textContent = texto;
             renderCodes(data.codigos || data.codes || []);
-            // NUEVO: guardar sesionId para /select
             currentSesionId = data.sesionId || null;
         } catch (err) {
             hideSpinner();
@@ -134,19 +137,19 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     newSearchBtn.addEventListener("click", () => {
-        mainSection.style.display = "block";
-        resultSection.style.display = "none";
+        containerInicial.style.display = "flex";
+        containerResultados.style.display = "none";
         input.value = "";
         hideMessages();
-        input.focus();
         currentSesionId = null;
+        setTimeout(() => {
+            input.focus();
+        }, 100); // Asegura que el input reciba el focus tras el cambio de pantalla
     });
 
     // Inicializar
     hideMessages();
-    mainSection.style.display = "block";
-    resultSection.style.display = "none";
-
-    // SIEMPRE enfoca el input al cargar la página
+    containerInicial.style.display = "flex";
+    containerResultados.style.display = "none";
     input.focus();
 });
