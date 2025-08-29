@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // NUEVO: almacenar sesionId para usarlo en /select
     let currentSesionId = null;
 
-    const API_BASE = "https://ffljaqyibd.execute-api.us-east-1.amazonaws.com/";
-        
+    // Quita la barra final para evitar doble barra en las rutas
+    const API_BASE = "https://ffljaqyibd.execute-api.us-east-1.amazonaws.com";
 
     if ("visualViewport" in window) {
         window.visualViewport.addEventListener("resize", () => {
@@ -101,49 +101,48 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-input.addEventListener("input", () => {
-    if (input.value.trim()) hideMessages();
-});
+    input.addEventListener("input", () => {
+        if (input.value.trim()) hideMessages();
+    });
 
-// Usamos keydown, pero solo actúa si hay texto no vacío
-input.addEventListener("keydown", async (e) => {
-    if (e.key !== "Enter") return;
-    e.preventDefault();
-    const texto = input.value.trim().substring(0, 200);
+    // Usamos keydown, pero solo actúa si hay texto no vacío
+    input.addEventListener("keydown", async (e) => {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        const texto = input.value.trim().substring(0, 200);
 
-    // Si el texto está vacío, simplemente sigue esperando sin hacer nada
-    if (!texto) {
-        // Opcional: podrías hacer un pequeño feedback visual aquí si lo deseas
-        input.focus();
-        return;
-    }
-    showSpinner();
-    hideMessages();
-
-    try {
-        const res = await fetch(API_BASE + "/texto", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ texto })
-        });
-        hideSpinner();
-        if (!res.ok) {
-            const errorText = await res.text();
-            throw new Error(`Error del servidor: ${res.status} ${errorText}`);
+        // Si el texto está vacío, simplemente sigue esperando sin hacer nada
+        if (!texto) {
+            input.focus();
+            return;
         }
-        const data = await res.json();
-        // Oculta pantalla inicial, muestra resultados
-        containerInicial.style.display = "none";
-        containerResultados.style.display = "flex";
-        textoPlaceholder.textContent = texto;
-        renderCodes(data.codigos || data.codes || []);
-        currentSesionId = data.sesionId || null;
-    } catch (err) {
-        hideSpinner();
-        showError("Error: " + (err.message || "Error desconocido"));
-    }
-});
-    
+        showSpinner();
+        hideMessages();
+
+        try {
+            const res = await fetch(API_BASE + "/texto", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ texto })
+            });
+            hideSpinner();
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(`Error del servidor: ${res.status} ${errorText}`);
+            }
+            const data = await res.json();
+            // Oculta pantalla inicial, muestra resultados
+            containerInicial.style.display = "none";
+            containerResultados.style.display = "flex";
+            textoPlaceholder.textContent = texto;
+            renderCodes(data.codigos || data.codes || []);
+            currentSesionId = data.sesionId || null;
+        } catch (err) {
+            hideSpinner();
+            showError("Error: " + (err.message || "Error desconocido"));
+        }
+    });
+
     newSearchBtn.addEventListener("click", () => {
         containerInicial.style.display = "flex";
         containerResultados.style.display = "none";
