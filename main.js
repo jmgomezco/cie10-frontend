@@ -170,6 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await res.json();
             containerInicial.style.display = "none";
             containerResultados.style.display = "flex";
+            history.replaceState(null, "", "/"); // <-- Solo aquí en el cambio de pantalla
             textoPlaceholder.textContent = texto;
             renderCodes(data.codigos || data.codes || []);
             currentSesionId = data.sesionId || null;
@@ -182,6 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
     newSearchBtn.addEventListener("click", () => {
         containerInicial.style.display = "flex";
         containerResultados.style.display = "none";
+        history.replaceState(null, "", "/"); // <-- Solo aquí en el cambio de pantalla
         input.value = "";
         hideMessages();
         currentSesionId = null;
