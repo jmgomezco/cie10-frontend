@@ -21,9 +21,10 @@ body {
     width: 100%;
     max-width: 25cm;
     min-height: 100vh;
-    margin: 2cm auto 0;
+    margin: 2cm auto 0; /* Mantiene el margen original para la pantalla inicial */
    
 }
+
 /* Pantalla resultados */
 .container-resultados {
     display: flex;
@@ -33,7 +34,7 @@ body {
     width: 100%;
     max-width: 25cm;
     min-height: 100vh;
-    margin: 1cm auto 0;
+    margin: 0.5cm auto 0;    /* Se reduce el margen superior para acercar el contenido al título */
     padding: 0px;
     background-color: #ffffff;
 }
@@ -50,6 +51,11 @@ h2 {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     text-align: left;
     align-self: flex-start;
+}
+
+/* Reduce distancia debajo del título SOLAMENTE en pantalla de resultados */
+.container-resultados h2 {
+    margin-bottom: clamp(15px, 3vh, 24px); /* Mucho menor separación que el original */
 }
 
 .nhug { color: #1E5AA8; }
@@ -141,6 +147,10 @@ h2 {
     h2 {
         font-size: clamp(24px, 6vw, 36px);
         margin-bottom: clamp(12px, 4vh, 20px);
+    }
+    /* Reduce distancia debajo del título SOLO en resultados modo móvil */
+    .container-resultados h2 {
+        margin-bottom: clamp(10px, 2vh, 15px);
     }
     .instrucciones {
         font-size: clamp(16px, 4vw, 20px);
