@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Bloquear scroll en toda la página (pantalla fija)
+    document.body.style.overflow = 'hidden';
+
     // Elementos de la pantalla inicial
     const containerInicial = document.getElementById("container-inicial");
     const input = document.getElementById("textoInput");
