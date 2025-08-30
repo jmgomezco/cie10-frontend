@@ -107,6 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
                 toast.remove();
                 // Redirige y limpia el historial
+                history.replaceState(null, "", "/");
                 window.location.replace("https://nhug.ai");
             }, 500);
         }, 1500); // 1,5 segundos visible
