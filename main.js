@@ -156,14 +156,14 @@ document.addEventListener("DOMContentLoaded", function () {
             input.focus();
             return;
         }
-        hideMessages();   // <-- Primero oculta mensajes previos
-        showSpinner();    // <-- Luego muestra el spinner
+        hideMessages();
+        showSpinner();
 
         try {
             const res = await fetch(API_BASE + "/texto", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ user_text: texto })
+                body: JSON.stringify({ texto }) // <- SIEMPRE "texto"
             });
             hideSpinner();
             if (!res.ok) {
@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const data = await res.json();
             containerInicial.style.display = "none";
             containerResultados.style.display = "flex";
-            history.replaceState(null, "", "/"); // <-- Solo aquí en el cambio de pantalla
+            history.replaceState(null, "", "/");
             textoPlaceholder.textContent = texto;
             renderCodes(data.codigos || data.codes || []);
             currentsessionId = data.sessionId || null;
@@ -186,13 +186,13 @@ document.addEventListener("DOMContentLoaded", function () {
     newSearchBtn.addEventListener("click", () => {
         containerInicial.style.display = "flex";
         containerResultados.style.display = "none";
-        history.replaceState(null, "", "/"); // <-- Solo aquí en el cambio de pantalla
+        history.replaceState(null, "", "/");
         input.value = "";
         hideMessages();
         currentsessionId = null;
         setTimeout(() => {
             input.focus();
-        }, 100); // Asegura que el input reciba el focus tras el cambio de pantalla
+        }, 100);
     });
 
     // Inicializar
