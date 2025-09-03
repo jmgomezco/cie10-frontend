@@ -15,8 +15,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const newSearchBtn = document.getElementById("new-search-btn");
     const noCodesMsg = document.getElementById("no-codes-message");
 
-    // NUEVO: almacenar sesionId para usarlo en /select
-    let currentSesionId = null;
+    // NUEVO: almacenar sessionId para usarlo en /select
+    let currentsessionId = null;
 
     // Quita la barra final para evitar doble barra en las rutas
     const API_BASE = "https://ffljaqyibd.execute-api.us-east-1.amazonaws.com";
@@ -123,7 +123,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    sesionId: currentSesionId,
+                    sessionId: currentsessionId,
                     codigo: code.codigo || code.code,
                     desc: code.desc || code.descripcion || code.description || ""
                 })
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
             history.replaceState(null, "", "/"); // <-- Solo aquí en el cambio de pantalla
             textoPlaceholder.textContent = texto;
             renderCodes(data.codigos || data.codes || []);
-            currentSesionId = data.sesionId || null;
+            currentsessionId = data.sessionId || null;
         } catch (err) {
             hideSpinner();
             showError("Error: " + (err.message || "Error desconocido"));
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
         history.replaceState(null, "", "/"); // <-- Solo aquí en el cambio de pantalla
         input.value = "";
         hideMessages();
-        currentSesionId = null;
+        currentsessionId = null;
         setTimeout(() => {
             input.focus();
         }, 100); // Asegura que el input reciba el focus tras el cambio de pantalla
