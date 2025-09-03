@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
             number.textContent = code.codigo || code.code || "";
             const desc = document.createElement("div");
             desc.className = "code-description";
-            desc.textContent = code.desc_es || code.descripcion || code.description || "";
+            desc.textContent = code.desc || code.descripcion || code.description || "";
             info.appendChild(number);
             info.appendChild(desc);
 
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify({
                     sesionId: currentSesionId,
                     codigo: code.codigo || code.code,
-                    desc_es: code.desc_es || code.descripcion || code.description || ""
+                    desc: code.desc || code.descripcion || code.description || ""
                 })
             });
             hideSpinner();
@@ -163,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const res = await fetch(API_BASE + "/texto", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ texto })
+                body: JSON.stringify({ user_text: texto })
             });
             hideSpinner();
             if (!res.ok) {
