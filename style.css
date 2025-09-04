@@ -158,7 +158,7 @@ h2 {
     .caja-texto {
         font-size: clamp(16px, 4vw, 20px);
         padding: clamp(8px, 2vw, 12px);
-        border-radius: clamp(12px, 3vw, 18px);
+        border-radius: clamp(14px, 5vw, 18px);
     }
     .spinner {
         width: clamp(40px, 8vw, 60px);
