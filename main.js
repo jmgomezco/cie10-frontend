@@ -170,12 +170,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 const errorText = await res.text();
                 throw new Error(`Error del servidor: ${res.status} ${errorText}`);
             }
-            const data = await res.json();
+           const data = await res.json();
             containerInicial.style.display = "none";
             containerResultados.style.display = "flex";
             history.replaceState(null, "", "/");
             textoPlaceholder.textContent = texto;
-            renderCodes(data.candidatos_gpt || []);
+            renderCodes(data.candidatos_gpt || []);  // <-- INSERCIÓN JUSTO AQUÍ
             currentsessionId = data.sessionId || null;
         } catch (err) {
             hideSpinner();
